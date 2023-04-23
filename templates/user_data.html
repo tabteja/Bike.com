@@ -1,0 +1,687 @@
+<!Doctype html>
+<html lang="en" class="h-100">
+  {%load static%}
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    {% include 'partials/bootcss.html' %}
+    <title>Users - Bikecom</title>
+  </head>
+  <body>
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light py-0 mb-5 shadow mx-auto" >
+
+            <div class="container-fluid">
+
+                <a class="navbar-brand" href='/'>
+                    <h2><b><strong style='color: black;'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="30" fill="currentColor" class="bi bi-recycle mx-2" viewBox="0 0 16 16">
+                                <path d="M9.302 1.256a1.5 1.5 0 0 0-2.604 0l-1.704 2.98a.5.5 0 0 0 .869.497l1.703-2.981a.5.5 0 0 1 .868 0l2.54 4.444-1.256-.337a.5.5 0 1 0-.26.966l2.415.647a.5.5 0 0 0 .613-.353l.647-2.415a.5.5 0 1 0-.966-.259l-.333 1.242-2.532-4.431zM2.973 7.773l-1.255.337a.5.5 0 1 1-.26-.966l2.416-.647a.5.5 0 0 1 .612.353l.647 2.415a.5.5 0 0 1-.966.259l-.333-1.242-2.545 4.454a.5.5 0 0 0 .434.748H5a.5.5 0 0 1 0 1H1.723A1.5 1.5 0 0 1 .421 12.24l2.552-4.467zm10.89 1.463a.5.5 0 1 0-.868.496l1.716 3.004a.5.5 0 0 1-.434.748h-5.57l.647-.646a.5.5 0 1 0-.708-.707l-1.5 1.5a.498.498 0 0 0 0 .707l1.5 1.5a.5.5 0 1 0 .708-.707l-.647-.647h5.57a1.5 1.5 0 0 0 1.302-2.244l-1.716-3.004z"/>
+                            </svg>BIKECOM</strong></b></h2><span class="sr-only"></span>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarnav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                {% if request.user.is_authenticated and request.user.role == 'seller' %}
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+
+                    <ul class="navbar-nav mx-2">
+
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/dashboard" style='color: black;'><strong>DASHBOARD</strong></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/vehicles" style='color: black;'><strong>VEHICLES</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/companies" style='color: black;'><strong>COMPANIES</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/services" style='color: black;'><strong>SERVICES</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/about" style='color: black;'><strong>ABOUT</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/contact" style='color: black;'><strong>CONTACT</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/blog" style='color: black;'><strong>BLOG</strong></a>
+                            </li>
+                            <li class="nav-item mx-1 col-3">
+                                <a class="nav-link" href="/add_vehicle" style='color: black;'><strong>SELL YOUR VEHICLE</strong></a>
+                            </li>
+
+                    </ul>
+
+                    <div class="container-fluid">
+
+                        <ul class="navbar-nav mx-2 justify-content-end">
+
+                            {% if request.user.is_authenticated %}
+
+                                <div class="dropdown mx-2">
+                                    <a href="#" class="d-flex align-items-center text-black text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="/static/profile-icon.gif" alt="" width="32" height="35" class="rounded-circle me-2">
+                                        <strong>
+                                            {{user.first_name.title}}
+                                            {% if user.is_superuser %}
+                                            {{user.email}}
+                                            {% endif %}
+                                        </strong>
+                                    </a>
+
+                                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow text-center">
+                                        <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                                        <li><a class="dropdown-item" href="/add_profile">Edit profile</a></li>
+                                        <li><a class="dropdown-item" href="">Settings</a></li>
+                                        <li><a class="dropdown-item" href="#">Delete account</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="/logout">Sign out</a></li>
+                                    </ul>
+
+                                </div>
+                                
+                                <li class="nav-item mx-3">
+                                    <a type="hidden" class="text-hidden" href=""></a>
+                                </li>
+
+                            {% else %}
+
+                                <div class="container-fluid">
+                                    <ul class="navbar-nav mx-2 justify-content-end">
+                                        <div class="dropdown mx-2">
+                                            <button class="btn btn-success" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Buyer
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-dark text-center">
+                                                <li><a class="dropdown-item" href="/buyer_register">Register</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="/login">Login</a></li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="dropdown mx-2">
+                                            <button class="btn btn-success" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Seller
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-dark text-center">
+                                                <li><a class="dropdown-item" href="/seller_register">Register</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="/login">Login</a></li>
+                                            </ul>
+                                        </div>
+                                    </ul>
+                                </div>
+
+                                <li class="__uqj nav-item"></li>
+
+                                <li class="nav-item mx-3">
+                                    <a type="button" class="btn btn-outline-dark" href="/login">Admin</a>
+                                </li>
+
+                            {% endif %}
+
+                        </ul>
+                        
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+                {% if request.user.is_authenticated and request.user.role == 'buyer' %}
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+
+                    <ul class="navbar-nav mx-2">
+
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/home" style='color: black;'><strong>HOME</strong></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/vehicles" style='color: black;'><strong>VEHICLES</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/companies" style='color: black;'><strong>COMPANIES</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/services" style='color: black;'><strong>SERVICES</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/about" style='color: black;'><strong>ABOUT</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/contact" style='color: black;'><strong>CONTACT</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/blog" style='color: black;'><strong>BLOG</strong></a>
+                            </li>
+                    </ul>
+
+                    <div class="container-fluid">
+
+                        <ul class="navbar-nav mx-2 justify-content-end">
+
+                            {% if request.user.is_authenticated %}
+
+                                <div class="dropdown mx-2">
+                                    <a href="#" class="d-flex align-items-center text-black text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="/static/profile-icon.gif" alt="" width="32" height="35" class="rounded-circle me-2">
+                                        <strong>
+                                            {{user.first_name.title}}
+                                            {% if user.is_superuser %}
+                                            {{user.email}}
+                                            {% endif %}
+                                        </strong>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow text-center">
+                                        <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                                        <li><a class="dropdown-item" href="/add_profile">Edit profile</a></li>
+                                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                                        <li><a class="dropdown-item" href="#">Delete account</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="/logout">Sign out</a></li>
+                                    </ul>
+
+                                </div>
+
+                            {% else %}
+
+                                <div class="container-fluid">
+                                    <ul class="navbar-nav mx-2 justify-content-end">
+                                        <div class="dropdown mx-2">
+                                            <button class="btn btn-success" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Buyer
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-dark text-center">
+                                                <li><a class="dropdown-item" href="/buyer_register">Register</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="/login">Login</a></li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="dropdown mx-2">
+                                            <button class="btn btn-success" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Seller
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-dark text-center">
+                                                <li><a class="dropdown-item" href="/seller_register">Register</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="/login">Login</a></li>
+                                            </ul>
+                                        </div>
+                                    </ul>
+                                </div>
+
+                                <li class="__uqj nav-item"></li>
+
+                                <li class="nav-item mx-3">
+                                    <a type="button" class="btn btn-outline-dark" href="/login">Admin</a>
+                                </li>
+
+                            {% endif %}
+
+                        </ul>
+                        
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+                {% if request.user.is_authenticated and user.is_superuser %}
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+
+                    <ul class="navbar-nav mx-2">
+
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/admin_page" style='color: black;'><strong>HOME</strong></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/vehicles" style='color: black;'><strong>VEHICLES</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/companies" style='color: black;'><strong>COMPANIES</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/services" style='color: black;'><strong>SERVICES</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/about" style='color: black;'><strong>ABOUT</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/contact" style='color: black;'><strong>CONTACT</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/blog" style='color: black;'><strong>BLOG</strong></a>
+                            </li>
+                            <li class="nav-item mx-1 col-3">
+                                <a class="nav-link" href="/manage" style='color: black;'><strong>MANAGE DATA</strong></a>
+                            </li>
+                    </ul>
+
+                    <div class="container-fluid">
+
+                        <ul class="navbar-nav mx-2 justify-content-end">
+
+                            {% if request.user.is_authenticated %}
+
+                                <div class="dropdown mx-2">
+                                    <a href="#" class="d-flex align-items-center text-black text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="/static/profile-icon.gif" alt="" width="32" height="35" class="rounded-circle me-2">
+                                        <strong>
+                                            {{user.first_name.title}}
+                                            {% if user.is_superuser %}
+                                            {{user.email}}
+                                            {% endif %}
+                                        </strong>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow text-center">
+                                        <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                                        <li><a class="dropdown-item" href="/add_profile">Edit profile</a></li>
+                                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                                        <li><a class="dropdown-item" href="#">Delete account</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="/logout">Sign out</a></li>
+                                    </ul>
+
+                                </div>
+                                
+                                {% if user.is_superuser %}
+
+                                <style>
+
+                                    .badge {
+                                        background-color: #fa3e3e;
+                                        border-radius: 4px;
+                                        color: white;
+                                        
+                                        padding: 2px 4px;
+                                        font-size: 10px;
+                                        
+                                        position: absolute; /* Position the badge within the relatively positioned button */
+                                        top: 0;
+                                        right: 0;
+                                    }
+                                </style>
+
+                                <li class="nav-item mx-1">
+                                    <div class="dropdown mx-2 pt-1 dropend">
+                                        <a href="#" class="d-flex notification align-items-center text-black text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                                            </svg>
+                                            <span class="position-end translate-top badge bg-danger">5</span>
+                                        </a>
+
+                                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow text-center mt-5 mx-auto">
+                                            
+                                            <small class="mx-5">Message</small>
+                                            <small class="mx-5">Email</small>
+                                            <small class="mx-5">ID</small>
+                                            <small class="mx-auto">Time</small>
+
+                                            <hr>
+
+                                            {% if nu %}
+                                            {% for u in nu %}
+                                            <li>
+                                                <a class="dropdown-item" href="/manage">
+                                                    <small class="mx-3">New user joined</small>
+                                                    <small class="mx-3">Email : '{{u.email}}'</small>
+                                                    <small class="mx-3">User ID : '{{u.id}}'</small>
+                                                    <small class="mx-auto">{% now "G:i:s" %}</small>
+                                                </a>
+                                            </li>
+                                            <hr>
+                                            {% endfor %}
+                                            {% endif %}
+                                            
+                                            {% if ns %}
+                                            {% for s in ns %}
+                                            <li>
+                                                <a class="dropdown-item" href="/manage">
+                                                    <small class="mx-3">New vehicle added</small>
+                                                    <small class="mx-3">Name : '{{s.title}}'</small>
+                                                    <small class="mx-3">Seller ID : '{{s.id}}'</small>
+                                                    <small class="mx-auto">{% now "G:i:s" %}</small>
+                                                </a>
+                                            </li>
+                                            <hr>
+                                            {% endfor %}
+                                            {% endif %}
+
+                                            {% if nb %}
+                                            {% for b in nb %}
+                                            <li>
+                                                <a class="dropdown-item" href="/manage">
+                                                    <small class="mx-3">Vehicle purchased</small>
+                                                    <small class="mx-3">Name : '{{b.title}}'</small>
+                                                    <small class="mx-3">Buyer ID : '{{b.id}}'</small>
+                                                    <small class="mx-auto">{% now "G:i:s" %}</small>
+                                                </a>
+                                            </li>
+                                            <hr>
+                                            {% endfor %}
+                                            {% endif %}
+
+                                            {% if nm %}
+                                            {% for m in nm %}
+                                            <li>
+                                                <a class="dropdown-item" href="/manage">
+                                                    <small class="mx-3">New membership</small>
+                                                    <small class="mx-3">Email : '{{m.email}}'</small>
+                                                    <small class="mx-3">User ID : '{{m.id}}'</small>
+                                                    <small class="mx-auto">{% now "G:i:s" %}</small>
+                                                </a>
+                                            </li>
+                                            <hr>
+                                            {% endfor %}
+                                            {% endif %}
+
+                                            {% if bk %}
+                                            {% for b in bk %}
+                                            <li>
+                                                <a class="dropdown-item" href="/manage">
+                                                    <small class="mx-3">Service slot booked - {{b.name.title}}</small>
+                                                    <small class="mx-3">Email : '{{b.email}}'</small>
+                                                    <small class="mx-3">Appointment Date on : '{{b.service_date}}'</small>
+                                                    <small class="mx-auto">{% now "G:i:s" %}</small>
+                                                </a>
+                                            </li>
+                                            <hr>
+                                            {% endfor %}
+                                            {% endif %}
+
+                                        </ul>
+
+                                    </div>
+                                </li>
+
+                                <script>
+                                    const notificationIcon = document.getElementById('notification-icon');
+                                    // check for new notifications every 5 seconds
+                                    setInterval(() => {
+                                    fetch('/notifications/check/')
+                                        .then(response => response.json())
+                                        .then(data => {
+                                        const count = data.count;
+                                        if (count > 0) {
+                                            notificationIcon.style.visibility = 'visible';
+                                        } else {
+                                            notificationIcon.style.visibility = 'hidden';
+                                        }
+                                        })
+                                        .catch(error => console.error(error));
+                                    }, 5000);
+                                </script>
+
+                                {% endif %}
+
+                            {% else %}
+
+                                <div class="container-fluid">
+                                    <ul class="navbar-nav mx-2 justify-content-end">
+                                        <div class="dropdown mx-2">
+                                            <button class="btn btn-success" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Buyer
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-dark text-center">
+                                                <li><a class="dropdown-item" href="/buyer_register">Register</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="/login">Login</a></li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="dropdown mx-2">
+                                            <button class="btn btn-success" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Seller
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-dark text-center">
+                                                <li><a class="dropdown-item" href="/seller_register">Register</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="/login">Login</a></li>
+                                            </ul>
+                                        </div>
+                                    </ul>
+                                </div>
+
+                                <li class="__uqj nav-item"></li>
+
+                                <li class="nav-item mx-3">
+                                    <a type="button" class="btn btn-outline-dark" href="/login">Admin</a>
+                                </li>
+
+                            {% endif %}
+
+                        </ul>
+                        
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+                {% if not request.user.is_authenticated %}
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+
+                    <ul class="navbar-nav mx-2">
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="/vehicles" style='color: black;'><strong>VEHICLES</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/companies" style='color: black;'><strong>COMPANIES</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/services" style='color: black;'><strong>SERVICES</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/about" style='color: black;'><strong>ABOUT</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/contact" style='color: black;'><strong>CONTACT</strong></a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="/blog" style='color: black;'><strong>BLOG</strong></a>
+                            </li>
+
+                    </ul>
+
+                </div>
+
+                <div class="container-fluid">
+
+                    <ul class="navbar-nav mx-2 justify-content-end">
+
+                            {% if request.user.is_authenticated %}
+
+                                <div class="dropdown mx-2">
+                                    <a href="#" class="d-flex align-items-center text-black text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="/static/profile-icon.gif" alt="" width="32" height="35" class="rounded-circle me-2">
+                                        <strong>{{user.first_name.title}}
+                                            {% if user.is_superuser %}
+                                            {{user.email}}
+                                            {% endif %}
+                                        </strong>
+                                    </a>
+
+                                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow text-center">
+                                        <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                                        <li><a class="dropdown-item" href="/add_profile">Edit profile</a></li>
+                                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                                        <li><a class="dropdown-item" href="#">Delete account</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="/logout">Sign out</a></li>
+                                    </ul>
+
+                                </div>
+
+
+                            {% else %}
+
+                                <div class="container-fluid">
+                                    <ul class="navbar-nav mx-2 justify-content-end">
+                                        <div class="dropdown mx-2">
+                                            <button class="btn btn-success" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Buyer
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-dark text-center">
+                                                <li><a class="dropdown-item" href="/buyer_register">Register</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="/login">Login</a></li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="dropdown mx-2">
+                                            <button class="btn btn-success" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Seller
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-dark text-center">
+                                                <li><a class="dropdown-item" href="/seller_register">Register</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="/login">Login</a></li>
+                                            </ul>
+                                        </div>
+                                    </ul>
+                                </div>
+
+                                <li class="__uqj nav-item"></li>
+
+                                <li class="nav-item mx-3">
+                                    <a type="button" class="btn btn-dark" href="/login">Admin</a>
+                                </li>
+
+                            {% endif %}
+
+                        </ul>
+                        
+                </div>
+
+                {% endif %}
+
+            </div>
+
+    </nav>
+
+        <strong><h3 class='text-center mt-5 pt-5 py-2'><u>Users</u></h3></strong>
+
+        <div class="col-sm-10 mt-4 text-center mx-auto">
+
+            <div class="row col-md-10 text-center mx-auto">
+
+                <div class="col-sm-10 mx-auto mb-5 py-2">
+                    <table class="table text-center mx-auto">
+                            <thead>
+                                <tr>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Email Address</th>
+                                <th scope="col">Role</th>
+                                </tr>
+                            </thead>
+
+                            {% if ud %}
+                            {% for i in ud %}
+
+                            <tbody>
+                                <tr>
+                                    <td><h6 class='mt-3 mb-2'>{{i.first_name.title}}</h6></td>
+                                    <td><h6 class='mt-3 mb-2'>{{i.last_name.title}}</h6></td>
+                                    <td><h6 class='mt-3 mb-2'>{{i.email}}</h6></td>
+                                    <td><h6 class='mt-3 mb-2'>{{i.role.upper}}</h6></td>
+                                </tr>
+                            </tbody>
+
+                            {% endfor %}
+                            {% endif %}
+                        
+                    </table>
+                    <br>
+                </div>
+
+            </div>
+            
+        </div>
+
+        <hr>
+
+        <footer class="footer pt-3 mt-auto py-5 bg-dark">
+
+            <div class="container py-4 py-md-2 px-4 px-md-3">
+
+                <div class="row">
+
+                    <div class="col-lg-3 mb-3">
+
+                        <a class="d-inline-flex align-items-center mb-2 link-dark text-decoration-none" href="/">
+                            <span class="fs-5"><strong>Rusher</strong></span>
+                        </a>
+
+                        <ul class="list-unstyled small text-muted">
+                            <li class="mb-2">Designed and built with all the love in the world by the <a href="/">Rusher team</a> with the help of <a href="/">our contributors</a>.</li>
+                            <li class="mb-2">Code licensed <a href="/" target="" rel="">MIT</a>, docs <a href="/" target="" rel="">CC BY 3.0</a>.</li>
+                            <li class="mb-2">Currently v5.2.0.</li>
+                        </ul>
+
+                    </div>
+                    <div class="col-5 col-lg-2 offset-lg-1 mb-3">
+                        <h5>Links</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="/">Home</a></li>
+                            <li class="mb-2"><a href="/">Docs</a></li>
+                            <li class="mb-2"><a href="/">Examples</a></li>
+                            <li class="mb-2"><a href="/">Icons</a></li>
+                            <li class="mb-2"><a href="/">Themes</a></li>
+                            <li class="mb-2"><a href="/">Blog</a></li>
+                            <li class="mb-2"><a href="/">Swag Store</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-5 col-lg-2 mb-3">
+                        <h5>Guides</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="/">Getting started</a></li>
+                            <li class="mb-2"><a href="/">Starter template</a></li>
+                            <li class="mb-2"><a href="/">Webpack</a></li>
+                            <li class="mb-2"><a href="/">Parcel</a></li>
+                            <li class="mb-2"><a href="/">Vite</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-5 col-lg-2 mb-3">
+                        <h5>Projects</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="/">Getting started</a></li>
+                            <li class="mb-2"><a href="/">Info</a></li>
+                            <li class="mb-2"><a href="/">About</a></li>
+                            <li class="mb-2"><a href="/">RFS</a></li>
+                            <li class="mb-2"><a href="/">API</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="app-cont text-center">
+                <a href="https://play.google.com/store/apps/" target="_blank">
+                    <img src="https://static.naukimg.com/s/0/0/i/new-homepage/android-app.png" height="44" width="151">
+                </a>
+                <a href="https://itunes.apple.com/in/app/" target="_blank">
+                    <img src="https://static.naukimg.com/s/0/0/i/new-homepage/ios-app.png" height="44" width="151">
+                </a>
+            </div>
+
+        </footer>
+
+    {% include 'partials/bootjs.html' %}
+
+    <script src="{% static 'script.js' %}" type="text/javascript"> </script>
+
+  </body>
+</html>
